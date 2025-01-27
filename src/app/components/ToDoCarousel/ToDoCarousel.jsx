@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import ToDoCard from '../ToDoCard/ToDoCard';
 import './ToDoCarousel.css';
+import SearchOverlay from '../SearchOverlay/SearchOverlay';
 
 const formSchema = z.object({
   todos: z.array(
@@ -30,6 +31,19 @@ const TodoCarousel = () => {
   const [todoLists, setTodoLists] = useState(defaultTodoLists);
   const [currentTodoList, setCurrentTodoList] = useState(0);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'f') {
+        e.preventDefault();
+        setIsSearchOpen(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   // separate form controls for each todo list
   const forms = todoLists.map((_, index) => 
@@ -145,6 +159,13 @@ const TodoCarousel = () => {
           ))}
         </div>
       </div>
+
+      <SearchOverlay 
+        isOpen={isSearchOpen}
+        onClose={() => setIsSearchOpen(false)}
+        todoLists={todoLists}
+        setCurrentTodoList={setCurrentTodoList}
+      />
     </AbsoluteCenter>
   );
 };

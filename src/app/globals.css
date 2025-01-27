@@ -1,3 +1,7 @@
+body {
+  background-color: black;
+}
+
 .center-content {
   display: flex;
   justify-content: center;

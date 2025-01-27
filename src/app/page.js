@@ -1,6 +1,10 @@
 "use client";
+
+import { Theme } from '@chakra-ui/react';
 import ToDoCarousel from './components/ToDoCarousel/ToDoCarousel.jsx';
 
 export default function Home() {
-  return <ToDoCarousel />;
+  return <Theme appearance="dark">
+    <ToDoCarousel />
+  </Theme>;
 }

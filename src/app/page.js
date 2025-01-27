@@ -5,7 +5,7 @@ import { AbsoluteCenter } from "@chakra-ui/react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import ToDoCard from "./components/ToDoCard";
+import ToDoCard from "./components/ToDoCard/ToDoCard";
 
 const formSchema = z.object({
   todos: z.array(

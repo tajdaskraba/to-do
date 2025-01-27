@@ -5,6 +5,7 @@ import { Controller } from "react-hook-form";
 import { Field } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FiTrash2 } from "react-icons/fi";
+import "./ToDoItem.css";
 
 const ToDoItem = ({ field, index, form, update, remove }) => {
   const handleBlur = (e) => {
@@ -22,7 +23,7 @@ const ToDoItem = ({ field, index, form, update, remove }) => {
       name={`todos.${index}.completed`}
       render={({ field: { value, onChange } }) => (
         <Field>
-          <Flex align="center" wrap="wrap" width="100%">
+          <Flex className="todo-item-wrapper">
             <Checkbox
               checked={value}
               onCheckedChange={({ checked }) => onChange(checked)}
@@ -33,51 +34,20 @@ const ToDoItem = ({ field, index, form, update, remove }) => {
                   autoFocus
                   onKeyDown={(e) => e.key === "Enter" && handleBlur(e)}
                   onBlur={handleBlur}
-                  style={{
-                    height: "inherit",
-                    border: "none",
-                    padding: "0",
-                    outline: "none",
-                    width: "100%",
-                    minWidth: 0,
-                    wordBreak: "break-word",
-                    whiteSpace: "pre-wrap",
-                  }}
+                  className="todo-input"
                 />
               ) : (
-                <Flex 
-                  position="relative" 
-                  width="100%" 
-                  align="center"
-                  _hover={{
-                    "& > .delete-icon": {
-                      opacity: 1,
-                      visibility: "visible"
-                    }
-                  }}
-                >
+                <Flex className="todo-text-container">
                   <Text
                     textDecoration={value ? "line-through" : "none"}
-                    userSelect="none"
                     onClick={() => update(index, { ...field, isEditing: true })}
-                    transition="all 0.2s"
-                    style={{
-                      wordBreak: "break-word",
-                      whiteSpace: "pre-wrap",
-                      width: "100%",
-                    }}
+                    className="todo-text"
                   >
                     {field.text}
                   </Text>
                   <Icon
                     as={FiTrash2}
                     className="delete-icon"
-                    ml={2}
-                    cursor="pointer"
-                    opacity={0}
-                    visibility="hidden"
-                    transition="all 0.2s"
-                    color="red.600"
                     onClick={handleDelete}
                   />
                 </Flex>

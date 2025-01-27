@@ -2,8 +2,9 @@
 
 import React from "react";
 import { Card, Text, Box, Stack, Input } from "@chakra-ui/react";
-import ToDoItem from "./ToDoItem";
-import NewTodoInput from "./NewToDoInput";
+import ToDoItem from "../ToDoItem/ToDoItem";
+import NewTodoInput from "../NewToDoInput/NewToDoInput";
+import "./ToDoCard.css";
 
 const ToDoCard = ({
   isEditingTitle,
@@ -20,17 +21,9 @@ const ToDoCard = ({
 }) => {
   return (
     <Box>
-      <Card.Root width="420px" variant="outline" style={{ padding: "8px" }}>
+      <Card.Root variant="outline" className="todo-card">
         <Card.Body gap={2}>
-          <span
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              verticalAlign: "middle",
-              height: "48px"
-            }}
-          >
+          <span className="title-container">
             {isEditingTitle ? (
               <Input
                 value={title}
@@ -40,13 +33,13 @@ const ToDoCard = ({
                 onKeyDown={handleKeyDown}
                 fontSize="xl"
                 mt={2}
-                style={{ height: "inherit", border: "none", outline: "none", padding: "0", paddingBottom: "19px", margin: "0", fontWeight: "500" }}
+                className="title-input"
               />
             ) : (
               <Text
                 fontSize="xl"
                 mt={2}
-                style={{ height: "inherit", border: "none", outline: "none", padding: "0", margin: "0", cursor: "pointer", fontWeight: "500" }}
+                className="title-text"
                 onClick={() => setIsEditingTitle(true)}
               >
                 {title}

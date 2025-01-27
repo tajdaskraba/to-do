@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { Input, Flex, IconButton, Icon } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa6";
-
+import "./NewToDoInput.css";
 
 const NewTodoInput = ({ append }) => {
   const [isAdding, setIsAdding] = useState(false);
@@ -26,8 +26,8 @@ const NewTodoInput = ({ append }) => {
 
   return isAdding ? (
     <Field>
-      <Flex align="center" style={{ width: "100%" }}>
-        <Checkbox checked={false} style={{ marginRight: "8px" }} disabled>
+      <Flex align="center" className="todo-input-wrapper">
+        <Checkbox checked={false} className="todo-checkbox" disabled>
           <Input
             placeholder="Enter new todo"
             value={newTodoText}
@@ -35,7 +35,7 @@ const NewTodoInput = ({ append }) => {
             onKeyUp={handleAddTodo}
             onBlur={() => !newTodoText.trim() && setIsAdding(false)}
             autoFocus
-            style={{ height: "inherit", border: "none", padding: "0", outline: "none", width: "100%" }}
+            className="todo-input"
           />
         </Checkbox>
       </Flex>
@@ -47,7 +47,7 @@ const NewTodoInput = ({ append }) => {
       color={"#fff"}
       background={"transparent"}
       onClick={() => setIsAdding(true)}
-      style={{ padding: "4px", border: "1px solid white", borderRadius: "2px", width: "20px", height: "20px", float: "start" }}
+      className="add-button"
     >
       <FaPlus size={14} />
     </IconButton>

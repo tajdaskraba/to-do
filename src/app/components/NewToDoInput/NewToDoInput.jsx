@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
-import { Input, Flex, IconButton, Icon } from "@chakra-ui/react";
+import { Input, Flex, IconButton } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa6";
 import "./NewToDoInput.css";
 
-const NewTodoInput = ({ append }) => {
+const NewTodoInput = ({ append, isDisabled }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newTodoText, setNewTodoText] = useState("");
 
@@ -24,9 +24,13 @@ const NewTodoInput = ({ append }) => {
     }
   };
 
+  if (isDisabled && !isAdding) {
+    return null;
+  }
+
   return isAdding ? (
     <Field>
-      <Flex align="center" className="todo-input-wrapper">
+      <Flex className="todo-input-wrapper">
         <Checkbox checked={false} className="todo-checkbox" disabled>
           <Input
             placeholder="Enter new todo"

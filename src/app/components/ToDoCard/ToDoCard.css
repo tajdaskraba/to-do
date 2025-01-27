@@ -1,6 +1,8 @@
 .todo-card {
   padding: 8px;
   width: 420px;
+  height: 420px;
+  overflow-y: auto;
 }
 
 .title-container {
@@ -29,4 +31,17 @@
   margin: 0;
   cursor: text;
   font-weight: 500;
+}
+
+.title-placeholder {
+  color: #868686;
+  font-weight: 500;
+}
+
+.todo-item-wrapper {
+  align-items: center;
+  flex-wrap: wrap;
+  width: 320px;
+  padding: 8px 0;
+  margin: 2px 0;
 }

@@ -1,10 +1,18 @@
 "use client"
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Text, Box, Stack, Input } from "@chakra-ui/react";
 import ToDoItem from "../ToDoItem/ToDoItem";
 import NewTodoInput from "../NewToDoInput/NewToDoInput";
 import "./ToDoCard.css";
+
+const calculateLines = (text) => {
+  const charsPerLine = 40;
+  const lines = Math.ceil(text.length / charsPerLine);
+  return Math.max(1, lines);
+};
+
+const MAX_TOTAL_LINES = 11;
 
 const ToDoCard = ({
   isEditingTitle,
@@ -19,10 +27,26 @@ const ToDoCard = ({
   setIsEditingTitle,
   remove
 }) => {
+  const [totalLines, setTotalLines] = useState(0);
+
+  useEffect(() => {
+    const newTotalLines = fields.reduce((acc, field) => {
+      return acc + calculateLines(field.text);
+    }, 0);
+    setTotalLines(newTotalLines);
+  }, [fields]);
+
+  const handleAppend = (newTodo) => {
+    const newTodoLines = calculateLines(newTodo.text);
+    if (totalLines + newTodoLines <= MAX_TOTAL_LINES) {
+      append(newTodo);
+    }
+  };
+
   return (
     <Box>
       <Card.Root variant="outline" className="todo-card">
-        <Card.Body gap={2}>
+        <Card.Body className="card-body">
           <span className="title-container">
             {isEditingTitle ? (
               <Input
@@ -34,20 +58,21 @@ const ToDoCard = ({
                 fontSize="xl"
                 mt={2}
                 className="title-input"
+                placeholder="new to-do list"
               />
             ) : (
               <Text
                 fontSize="xl"
                 mt={2}
-                className="title-text"
+                className={`title-text ${!title && "title-placeholder"}`}
                 onClick={() => setIsEditingTitle(true)}
               >
-                {title}
+                {title || "new to-do list"}
               </Text>
             )}
           </span>
           <form onSubmit={form.handleSubmit(console.log)}>
-            <Stack align="flex-start" spacing={3}>
+            <Stack className="todo-items-container" spacing={2}>
               {fields.map((field, index) => (
                 <ToDoItem
                   key={field.id}
@@ -58,7 +83,11 @@ const ToDoCard = ({
                   remove={remove}
                 />
               ))}
-              <NewTodoInput append={append} />
+              <NewTodoInput 
+                append={handleAppend}
+                isDisabled={totalLines >= MAX_TOTAL_LINES}
+                remainingLines={MAX_TOTAL_LINES - totalLines}
+              />
             </Stack>
           </form>
         </Card.Body>

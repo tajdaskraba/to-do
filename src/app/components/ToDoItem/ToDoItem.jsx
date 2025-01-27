@@ -1,5 +1,6 @@
-"use client";
+"use client"
 
+import React from 'react';
 import { Flex, Text, Input, Icon } from "@chakra-ui/react";
 import { Controller } from "react-hook-form";
 import { Field } from "@/components/ui/field";
@@ -9,7 +10,12 @@ import "./ToDoItem.css";
 
 const ToDoItem = ({ field, index, form, update, remove }) => {
   const handleBlur = (e) => {
-    update(index, { ...field, text: e.target.value.trim(), isEditing: false });
+    const trimmedValue = e.target.value.trim();
+    if (trimmedValue === '') {
+      remove(index);
+    } else {
+      update(index, { ...field, text: trimmedValue, isEditing: false });
+    }
   };
 
   const handleDelete = (e) => {
@@ -17,16 +23,21 @@ const ToDoItem = ({ field, index, form, update, remove }) => {
     remove(index);
   };
 
+  const handleCheckChange = (checked) => {
+    update(index, { ...field, completed: checked });
+  };
+
   return (
     <Controller
       control={form.control}
       name={`todos.${index}.completed`}
-      render={({ field: { value, onChange } }) => (
+      defaultValue={field.completed}
+      render={({ field: { value } }) => (
         <Field>
           <Flex className="todo-item-wrapper">
             <Checkbox
               checked={value}
-              onCheckedChange={({ checked }) => onChange(checked)}
+              onCheckedChange={({ checked }) => handleCheckChange(checked)}
             >
               {field.isEditing ? (
                 <Input

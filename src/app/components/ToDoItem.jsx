@@ -1,13 +1,19 @@
 "use client";
 
-import { Flex, Text, Input } from "@chakra-ui/react";
+import { Flex, Text, Input, Icon } from "@chakra-ui/react";
 import { Controller } from "react-hook-form";
 import { Field } from "@/components/ui/field";
 import { Checkbox } from "@/components/ui/checkbox";
+import { FiTrash2 } from "react-icons/fi";
 
-const ToDoItem = ({ field, index, form, update }) => {
+const ToDoItem = ({ field, index, form, update, remove }) => {
   const handleBlur = (e) => {
     update(index, { ...field, text: e.target.value.trim(), isEditing: false });
+  };
+
+  const handleDelete = (e) => {
+    e.stopPropagation();
+    remove(index);
   };
 
   return (
@@ -39,18 +45,42 @@ const ToDoItem = ({ field, index, form, update }) => {
                   }}
                 />
               ) : (
-                <Text
-                  textDecoration={value ? "line-through" : "none"}
-                  userSelect="none"
-                  onClick={() => update(index, { ...field, isEditing: true })}
-                  style={{
-                    wordBreak: "break-word",
-                    whiteSpace: "pre-wrap",
-                    width: "100%",
+                <Flex 
+                  position="relative" 
+                  width="100%" 
+                  align="center"
+                  _hover={{
+                    "& > .delete-icon": {
+                      opacity: 1,
+                      visibility: "visible"
+                    }
                   }}
                 >
-                  {field.text}
-                </Text>
+                  <Text
+                    textDecoration={value ? "line-through" : "none"}
+                    userSelect="none"
+                    onClick={() => update(index, { ...field, isEditing: true })}
+                    transition="all 0.2s"
+                    style={{
+                      wordBreak: "break-word",
+                      whiteSpace: "pre-wrap",
+                      width: "100%",
+                    }}
+                  >
+                    {field.text}
+                  </Text>
+                  <Icon
+                    as={FiTrash2}
+                    className="delete-icon"
+                    ml={2}
+                    cursor="pointer"
+                    opacity={0}
+                    visibility="hidden"
+                    transition="all 0.2s"
+                    color="red.600"
+                    onClick={handleDelete}
+                  />
+                </Flex>
               )}
             </Checkbox>
           </Flex>

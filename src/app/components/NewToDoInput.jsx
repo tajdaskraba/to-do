@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
-import { Input, Flex, IconButton } from "@chakra-ui/react";
+import { Input, Flex, IconButton, Icon } from "@chakra-ui/react";
 import { FaPlus } from "react-icons/fa6";
 
 
@@ -32,7 +32,7 @@ const NewTodoInput = ({ append }) => {
             placeholder="Enter new todo"
             value={newTodoText}
             onChange={(e) => setNewTodoText(e.target.value)}
-            onKeyPress={handleAddTodo}
+            onKeyUp={handleAddTodo}
             onBlur={() => !newTodoText.trim() && setIsAdding(false)}
             autoFocus
             style={{ height: "inherit", border: "none", padding: "0", outline: "none", width: "100%" }}

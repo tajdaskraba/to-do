@@ -1,20 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import {
-  Card,
-  AbsoluteCenter,
-  Text,
-  Box,
-  Stack,
-  Input
-} from "@chakra-ui/react";
 
+import React, { useEffect, useState } from "react";
+import { AbsoluteCenter } from "@chakra-ui/react";
 import { useForm, useFieldArray, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-
-import ToDoItem from "./components/ToDoItem";
-import NewTodoInput from "./components/NewToDoInput";
+import ToDoCard from "./components/ToDoCard";
 
 const formSchema = z.object({
   todos: z.array(
@@ -29,7 +20,9 @@ const formSchema = z.object({
 
 export default function Home() {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
-  const [title, setTitle] = useState("New to-do list");
+  const [title, setTitle] = useState(() => 
+    localStorage.getItem("todoTitle") || "New to-do list"
+  );
 
   const storedTodos = JSON.parse(localStorage.getItem("todos") || "[]");
 
@@ -38,7 +31,7 @@ export default function Home() {
     defaultValues: { todos: storedTodos },
   });
 
-  const { fields, append, update } = useFieldArray({
+  const { fields, append, update, remove } = useFieldArray({
     control: form.control,
     name: "todos",
   });
@@ -52,11 +45,19 @@ export default function Home() {
     localStorage.setItem("todos", JSON.stringify(watchedTodos));
   }, [watchedTodos]);
 
-  const handleTitleChange = (e) => setTitle(e.target.value);
+  useEffect(() => {
+    localStorage.setItem("todoTitle", title);
+  }, [title]);
 
-  const handleBlur = () => setIsEditingTitle(false);
+  const handleTitleChange = (e) => {
+    setTitle(e.target.value);
+  };
 
-  const handleKeyDown = (e) => {
+  const handleTitleBlur = () => {
+    setIsEditingTitle(false);
+  };
+
+  const handleTitleKeyDown = (e) => {
     if (e.key === "Enter") {
       setIsEditingTitle(false);
     }
@@ -64,57 +65,19 @@ export default function Home() {
 
   return (
     <AbsoluteCenter>
-      <Box>
-        <Card.Root width="420px" variant="outline" style={{ padding: "8px" }}>
-          <Card.Body gap={2}>
-            <span
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "20px",
-                verticalAlign: "middle",
-                height: "48px"
-              }}
-            >
-              {isEditingTitle ? (
-                <Input
-                  value={title}
-                  onChange={handleTitleChange}
-                  autoFocus
-                  onBlur={handleBlur}
-                  onKeyDown={handleKeyDown}
-                  fontSize="xl"
-                  mt={2}
-                  style={{ height: "inherit", border: "none", outline: "none", padding: "0", paddingBottom: "19px", margin: "0", fontWeight: "500" }}
-                />
-              ) : (
-                <Text
-                  fontSize="xl"
-                  mt={2}
-                  style={{ height: "inherit", border: "none", outline: "none", padding: "0", margin: "0", cursor: "pointer", fontWeight: "500" }}
-                  onClick={() => setIsEditingTitle(true)}
-                >
-                  {title}
-                </Text>
-              )}
-            </span>
-            <form onSubmit={form.handleSubmit(console.log)}>
-              <Stack align="flex-start" spacing={3}>
-                {fields.map((field, index) => (
-                  <ToDoItem
-                    key={field.id}
-                    field={field}
-                    index={index}
-                    form={form}
-                    update={update}
-                  />
-                ))}
-                <NewTodoInput append={append} />
-              </Stack>
-            </form>
-          </Card.Body>
-        </Card.Root>
-      </Box>
+      <ToDoCard
+        isEditingTitle={isEditingTitle}
+        title={title}
+        handleTitleChange={handleTitleChange}
+        handleBlur={handleTitleBlur}
+        handleKeyDown={handleTitleKeyDown}
+        fields={fields}
+        form={form}
+        update={update}
+        append={append}
+        remove={remove}
+        setIsEditingTitle={setIsEditingTitle}
+      />
     </AbsoluteCenter>
   );
 }
